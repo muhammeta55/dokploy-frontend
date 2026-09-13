@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevOps Dokploy Frontend
 
-## Getting Started
+## Purpose & Technologies
 
-First, run the development server:
+A Next.js (App Router, TypeScript, Tailwind CSS) frontend, containerized
+with a multi-stage Dockerfile and deployed via Dokploy using Docker Compose
+and Auto Deploy.
+
+## Features
+
+- Home page with a "Check Backend" action
+- Fetches and displays the backend's root message and current version
+
+## Running Locally
+
+1. Install dependencies: `npm install`
+2. Create `.env.local` with: NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
+3. Start the dev server: `npm run dev`
+
+## Running with Docker
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker build --build-arg NEXT_PUBLIC_BACKEND_URL=https://BACKEND_DOMAIN -t dokploy-frontend .
+docker run -p 3000:3000 dokploy-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `NEXT_PUBLIC_BACKEND_URL` – base URL of the backend API. Since this is a
+  `NEXT_PUBLIC_` variable, it is embedded at build time (passed as a Docker
+  build argument), not read at runtime.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+This application is deployed via Dokploy, using a multi-stage Dockerfile
+(build stage compiles the app, production stage only ships the compiled
+`standalone` output). The GitHub repository is connected to Dokploy through
+a GitHub App integration, with Auto Deploy enabled on the `main` branch —
+every push automatically triggers a rebuild and redeploy. Domain routing
+and HTTPS are handled by Dokploy's built-in Traefik + Let's Encrypt
+integration.
 
-To learn more about Next.js, take a look at the following resources:
+## Live Domain
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_To be added once configured in Dokploy._
