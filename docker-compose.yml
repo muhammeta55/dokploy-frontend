@@ -8,3 +8,6 @@ services:
     restart: unless-stopped
     expose:
       - "3000"
+    environment:
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
